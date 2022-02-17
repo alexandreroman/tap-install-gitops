@@ -127,7 +127,7 @@ kapp deploy -a tap-install-gitops -f <(ytt -f gitops)
 ```
 
 At this point, kapp-controller will monitor the Git repository: any updates
-(commits) will be applied to your cluster, without having to run any commmands.
+(commits) will be applied to your cluster, without having to run any commands.
 
 Check that TAP is being deployed by running this command:
 
