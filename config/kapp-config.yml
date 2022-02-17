@@ -1,0 +1,16 @@
+apiVersion: kapp.k14s.io/v1alpha1
+kind: Config
+minimumRequiredVersion: 0.29.0
+waitRules:
+- supportsObservedGeneration: true
+  conditionMatchers:
+  - type: ReconcileFailed
+    status: "True"
+    failure: true
+  - type: ReconcileSucceeded
+    status: "True"
+    success: true
+  resourceMatchers:
+  - apiVersionKindMatcher:
+      apiVersion: packaging.carvel.dev/v1alpha1
+      kind: PackageRepository

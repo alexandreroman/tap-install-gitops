@@ -1,0 +1,114 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+
+---
+#@ def config():
+profile: full
+ceip_policy_disclosed: true
+buildservice:
+  kp_default_repository: #@ "{}/{}".format(data.values.tap.registry.host, data.values.tap.registry.repositories.buildService)
+  kp_default_repository_username: #@ data.values.tap.credentials.registry.username
+  kp_default_repository_password: #@ data.values.tap.credentials.registry.password
+  tanzunet_username: #@ data.values.tap.credentials.tanzuNet.username
+  tanzunet_password: #@ data.values.tap.credentials.tanzuNet.password
+  descriptor_name: "tap-1.0.0-full"
+  enable_automatic_dependency_updates: true
+
+supply_chain: basic
+ootb_supply_chain_basic:
+  registry:
+    server: #@ data.values.tap.registry.host
+    repository: #@ data.values.tap.registry.repositories.ootbSupplyChain
+  gitops:
+    ssh_secret: ""
+
+learningcenter:
+  ingressDomain: #@ data.values.tap.domains.learningCenter
+
+tap_gui:
+  service_type: ClusterIP
+  ingressEnabled: "true"
+  ingressDomain: #@ data.values.tap.domains.main
+  app_config:
+    app:
+      baseUrl: #@ "http://{}".format(data.values.tap.domains.tapGui)
+    integrations:
+      #@ if "github" in data.values.tap.credentials and "token" in data.values.tap.credentials.github:
+      github:
+      - host: github.com
+        token: #@ data.values.tap.credentials.github.token
+      #@ end
+    catalog:
+      locations:
+      #@ for catalog in data.values.tap.catalogs:
+      - type: url
+        target: #@ catalog
+      #@ end
+    backend:
+      baseUrl: #@ "http://{}".format(data.values.tap.domains.tapGui)
+      cors:
+        origin: #@ "http://{}".format(data.values.tap.domains.tapGui)
+      #@ if "backstage" in data.values.tap.credentials and "database" in data.values.tap.credentials.backstage:
+      backend:
+        database:
+          client: #@ data.values.tap.credentials.backstage.database.client
+          connection:
+            host: #@ data.values.tap.credentials.backstage.database.host
+            port: #@ data.values.tap.credentials.backstage.database.port
+            user: #@ data.values.tap.credentials.backstage.database.username
+            password: #@ data.values.tap.credentials.backstage.database.password
+            ssl: {rejectUnauthorized: true}
+      #@ end
+    #@ if "github" in data.values.tap.credentials and "clientId" in data.values.tap.credentials.github and "clientSecret" in data.values.tap.credentials.github:
+    auth:
+      environment: development
+      providers:
+        github:
+          development:
+            clientId: #@ data.values.tap.credentials.github.clientId
+            clientSecret: #@ data.values.tap.credentials.github.clientSecret
+    #@ end
+
+metadata_store:
+  app_service_type: LoadBalancer
+ 
+grype:
+  namespace: #@ data.values.tap.devNamespace
+  targetImagePullSecret: "tap-registry"
+
+contour:
+  envoy:
+    service:
+      type: LoadBalancer
+
+cnrs:
+  domain_name: #@ data.values.tap.domains.knative
+#@ end
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tap-values
+  namespace: #@ data.values.tap.namespace
+type: Opaque
+stringData:
+  values.yml: #@ yaml.encode(config())
+---
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageInstall
+metadata:
+  name: tap
+  namespace: #@ data.values.tap.namespace
+  annotations:
+    kapp.k14s.io/change-group: tap
+    kapp.k14s.io/change-rule: "upsert after upserting tap-install/rbac"
+    kapp.k14s.io/change-rule.repo: "upsert after upserting tap-install/tap-repo"
+spec:
+  packageRef:
+    refName: tap.tanzu.vmware.com
+    versionSelection:
+      constraints: #@ str(data.values.tap.version)
+  serviceAccountName: tap-default-sa
+  values:
+  - secretRef:
+      name: tap-values

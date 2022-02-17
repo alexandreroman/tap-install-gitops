@@ -1,0 +1,28 @@
+apiVersion: kappctrl.k14s.io/v1alpha1
+kind: App
+metadata:
+  name: tap-install-gitops
+  namespace: tap-install-gitops
+  annotations:
+    kapp.k14s.io/change-group: tap-install-gitops/app
+    kapp.k14s.io/change-rule: "upsert after upserting tap-install-gitops/rbac"
+spec:
+  serviceAccountName: tap-install-gitops-sa
+  fetch:
+  - git:
+      url: https://github.com/alexandreroman/tap-install-gitops
+      ref: origin/main
+      secretRef:
+        name: tap-install-gitops-github
+  template:
+  - ytt:
+      paths:
+      - config
+      - config-full
+      valuesFrom:
+      - configMapRef:
+          name: tap-install-gitops
+      - secretRef:
+          name: tap-install-gitops
+  deploy:
+  - kapp: {}

@@ -1,0 +1,18 @@
+#@data/values
+
+#@overlay/match-child-defaults missing_ok=True
+---
+tap:
+  version: "1.0.1"
+  namespace: tap-install
+  catalogs: []
+
+  registry:
+    host: registry.tap.tanzu.corp
+    repositories:
+      buildService: repo/build-service
+      ootbSupplyChain: repo/supply-chain
+
+  domains:
+    main: tap.tanzu.corp
+    tapGui: tap-gui.tap.tanzu.corp
