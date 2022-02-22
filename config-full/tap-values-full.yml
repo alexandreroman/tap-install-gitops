@@ -33,7 +33,7 @@ tap_gui:
   ingressDomain: #@ data.values.tap.domains.main
   app_config:
     app:
-      baseUrl: #@ "http://{}".format(data.values.tap.domains.tapGui)
+      baseUrl: #@ "https://{}".format(data.values.tap.domains.tapGui)
     integrations:
       #@ if "github" in data.values.tap.credentials and "token" in data.values.tap.credentials.github:
       github:
