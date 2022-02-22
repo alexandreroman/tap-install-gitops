@@ -45,9 +45,9 @@ tap_gui:
         target: #@ catalog
       #@ end
     backend:
-      baseUrl: #@ "http://{}".format(data.values.tap.domains.tapGui)
+      baseUrl: #@ "https://{}".format(data.values.tap.domains.tapGui)
       cors:
-        origin: #@ "http://{}".format(data.values.tap.domains.tapGui)
+        origin: #@ "https://{}".format(data.values.tap.domains.tapGui)
       #@ if "backstage" in data.values.tap.credentials and "database" in data.values.tap.credentials.backstage:
       backend:
         database:
@@ -83,6 +83,9 @@ contour:
 
 cnrs:
   domain_name: #@ data.values.tap.domains.knative
+  default_tls_secret: tanzu-system-ingress/tls
+  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
+
 #@ end
 ---
 apiVersion: v1
