@@ -10,7 +10,7 @@ spec:
   serviceAccountName: tap-install-gitops-sa
   fetch:
   - git:
-      url: https://github.com/alexandreroman/tap-install-gitops
+      url: https://github.com/sreeramsunkara/tap-install-gitops
       ref: origin/main
       secretRef:
         name: tap-install-gitops-github
