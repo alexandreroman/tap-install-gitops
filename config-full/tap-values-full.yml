@@ -24,6 +24,8 @@ ootb_supply_chain_basic:
 
 learningcenter:
   ingressDomain: #@ data.values.tap.domains.learningCenter
+  ingressSecret:
+    secretName: tls
 
 tap_gui:
   service_type: ClusterIP
