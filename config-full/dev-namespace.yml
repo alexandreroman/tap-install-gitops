@@ -25,8 +25,6 @@ kind: Secret
 metadata:
   name: registry-credentials
   namespace: #@ data.values.tap.devNamespace
-  annotations:
-    secretgen.carvel.dev/image-pull-secret: ""
 type: kubernetes.io/dockerconfigjson
 stringData:
   .dockerconfigjson: #@ json.encode(registry())
