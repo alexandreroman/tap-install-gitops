@@ -30,6 +30,8 @@ by creating `tap-install-secrets.yml`:
 
 1. (OPTIONAL) If you're updating any of the values of the TAP install, ala the TAP version or the like, you'll want to commit them to your git repo.
 
+1. (OPTIONAL) Remove any of the additional packages from the app in [`tap-install.yml`](gitops/tap-install.yml) should you not want them deployed. (ex. `additional/external-dns`)
+
 ### Deploy 
 You are now ready to apply the GitOps configuration:
 

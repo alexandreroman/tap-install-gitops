@@ -19,6 +19,7 @@ spec:
       paths:
       - config
       - config-full
+      - additional/external-dns
       valuesFrom:
       - configMapRef:
           name: tap-install-gitops
