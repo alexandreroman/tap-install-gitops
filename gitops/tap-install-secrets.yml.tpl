@@ -37,7 +37,7 @@ tap:
     #! ---------- Additional configuration beyond basic TAP installation ----------
 
     #! Remove suffix "-disabled" to enable a provider for External DNS.
-    external-dns:
+    externalDns:
       aws-disabled:
         region: eu-central-1
         credentials: #! Note internal VMware users: CloudGate credentials will not have the necessary permissions to work
