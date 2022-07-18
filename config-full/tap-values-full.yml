@@ -11,7 +11,7 @@ buildservice:
   kp_default_repository_password: #@ data.values.tap.credentials.registry.password
   tanzunet_username: #@ data.values.tap.credentials.tanzuNet.username
   tanzunet_password: #@ data.values.tap.credentials.tanzuNet.password
-  descriptor_name: "tap-1.0.0-full"
+  descriptor_name: "tap-1.1-lite"
   enable_automatic_dependency_updates: true
 
 supply_chain: basic
@@ -108,6 +108,7 @@ spec:
     refName: tap.tanzu.vmware.com
     versionSelection:
       constraints: #@ str(data.values.tap.version)
+      prereleases: {}
   serviceAccountName: tap-default-sa
   values:
   - secretRef:

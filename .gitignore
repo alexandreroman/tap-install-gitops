@@ -1,4 +1,6 @@
 .DS_Store
 config-custom
-tap-install-secrets.yml
+
+# SECRETS
 tap-install-config.yml
+tap-install-secrets.yml
